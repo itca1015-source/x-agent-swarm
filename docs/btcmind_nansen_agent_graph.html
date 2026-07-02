@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BTCMind Nansen-Derived Agent Graph</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --ink: #15202b;
+      --muted: #596877;
+      --line: #c7d2de;
+      --panel: #ffffff;
+      --blue: #1d6fb8;
+      --green: #16835b;
+      --amber: #9b6a10;
+      --red: #aa3f3f;
+      --violet: #6354b2;
+      --shadow: 0 10px 24px rgba(21, 32, 43, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.15;
+      font-weight: 720;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 900px;
+      font-size: 15px;
+    }
+
+    .evidence {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(94px, 1fr));
+      gap: 8px;
+      min-width: min(100%, 540px);
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid #dce4ec;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 4px 12px rgba(21, 32, 43, 0.04);
+    }
+
+    .metric b {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 18px 0 22px;
+      padding: 14px;
+      background: #eaf1f8;
+      border: 1px solid #d2dfec;
+      border-radius: 8px;
+    }
+
+    .step {
+      min-height: 88px;
+      background: var(--panel);
+      border: 1px solid #cfdae6;
+      border-radius: 8px;
+      padding: 12px;
+      position: relative;
+    }
+
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      width: 13px;
+      height: 1px;
+      background: #8aa2b8;
+    }
+
+    .step h2 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .section-title {
+      margin: 26px 0 12px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .agents {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(240px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .agent {
+      background: var(--panel);
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 430px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agent .top {
+      padding: 14px 16px 12px;
+      border-left: 5px solid var(--blue);
+      border-bottom: 1px solid #e6edf4;
+    }
+
+    .agent[data-layer="intelligence"] .top {
+      border-left-color: var(--green);
+    }
+
+    .agent[data-layer="action"] .top {
+      border-left-color: var(--blue);
+    }
+
+    .agent[data-layer="community"] .top {
+      border-left-color: var(--amber);
+    }
+
+    .agent[data-layer="control"] .top {
+      border-left-color: var(--violet);
+    }
+
+    .agent[data-layer="safety"] .top {
+      border-left-color: var(--red);
+    }
+
+    .agent h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .layer {
+      display: inline-block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .agent .body {
+      padding: 14px 16px 16px;
+      display: grid;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .block h4 {
+      margin: 0 0 5px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .block p,
+    .block li {
+      color: #263747;
+      font-size: 13px;
+    }
+
+    .block p {
+      margin: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #edf2f7;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    .instruction {
+      background: #f6f8fb;
+      border: 1px solid #dce4ec;
+      border-radius: 8px;
+      padding: 10px;
+      color: #213241;
+      font-size: 13px;
+    }
+
+    .lanes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      border: 1px solid #dce4ec;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .matrix div {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e7edf4;
+      font-size: 13px;
+    }
+
+    .matrix div:nth-child(odd) {
+      font-weight: 650;
+      background: #f1f5f9;
+    }
+
+    .matrix div:nth-last-child(-n+2) {
+      border-bottom: 0;
+    }
+
+    @media (max-width: 1200px) {
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .agents {
+        grid-template-columns: repeat(2, minmax(240px, 1fr));
+      }
+
+      .flow {
+        grid-template-columns: repeat(3, minmax(150px, 1fr));
+      }
+
+      .step::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 18px;
+      }
+
+      .agents,
+      .lanes,
+      .flow,
+      .evidence {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .matrix div:nth-child(odd) {
+        border-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>BTCMind Agent Graph From Nansen Reverse Engineering</h1>
+        <div class="subtitle">
+          Nansen's account behaves like a proof-distribution machine: data signals become posts, posts get continuation evidence, users and partners create proof, and the account amplifies the best proof. BTCMind should build agents around that loop.
+        </div>
+      </div>
+      <div class="evidence" aria-label="Nansen scrape sample">
+        <div class="metric"><b>181</b><span>originals</span></div>
+        <div class="metric"><b>132</b><span>replies</span></div>
+        <div class="metric"><b>109</b><span>quotes</span></div>
+        <div class="metric"><b>66</b><span>reposts</span></div>
+        <div class="metric"><b>105</b><span>mentions</span></div>
+      </div>
+    </header>
+
+    <section class="flow" aria-label="Core proof distribution loop">
+      <div class="step">
+        <h2>1. Signal</h2>
+        <p>Product, wallet, flow, debate, or market-structure observation.</p>
+      </div>
+      <div class="step">
+        <h2>2. Original</h2>
+        <p>Compact post with a hard mechanism, not a news recap.</p>
+      </div>
+      <div class="step">
+        <h2>3. Continuation</h2>
+        <p>Evidence, caveat, link, invalidation condition, or next signal.</p>
+      </div>
+      <div class="step">
+        <h2>4. Proof</h2>
+        <p>Users and partners post screenshots, wins, and product use cases.</p>
+      </div>
+      <div class="step">
+        <h2>5. Amplify</h2>
+        <p>Repost proof; quote only when BTCMind can add a data layer.</p>
+      </div>
+      <div class="step">
+        <h2>6. Learn</h2>
+        <p>Feed engagement, UGC, and conversion data back into agents.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Agent System</h2>
+    <section class="agents">
+      <article class="agent" data-layer="intelligence">
+        <div class="top">
+          <h3>Signal Source Agent</h3>
+          <span class="layer">Intelligence</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Turn BTCMind product output and market research into structured signals.</p>
+          </div>
+          <div class="block">
+            <h4>Inputs</h4>
+            <ul>
+              <li>BTCMind debates and analyst disagreement</li>
+              <li>Wallet, flow, stablecoin, custody, bridge, and security observations</li>
+              <li>Manual research notes and source URLs</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p><code>state/btcmind_signals.json</code> with type, summary, evidence, operator watch, risk notes.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Find one non-obvious crypto mechanism BTCMind can explain better than the headline. Write the signal with evidence and the condition that would make it wrong."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="action">
+        <div class="top">
+          <h3>Poster Agent</h3>
+          <span class="layer">Action</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Create reviewable original posts from structured signals.</p>
+          </div>
+          <div class="block">
+            <h4>Templates</h4>
+            <ul>
+              <li>Wallet or flow alert</li>
+              <li>Bull vs bear debate result</li>
+              <li>Hidden constraint</li>
+              <li>Operator watch item</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p><code>kind: original</code> draft in <code>state/reply_queue.json</code>.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Write one BTCMind post that makes the reader see the machinery under the headline. No hype, no price target, no hashtag, no advice."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="action">
+        <div class="top">
+          <h3>Continuation Agent</h3>
+          <span class="layer">Action</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Add evidence replies under BTCMind originals, like Nansen's "Track this" and "2/" replies.</p>
+          </div>
+          <div class="block">
+            <h4>Inputs</h4>
+            <ul>
+              <li>Original post text</li>
+              <li>Evidence lines</li>
+              <li>BTCMind link or artifact</li>
+              <li>Risk and invalidation condition</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>One to three follow-up replies that deepen trust without bloating the root post.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Add the evidence the root post did not have room for: one data point, one caveat, and one next signal to watch."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="community">
+        <div class="top">
+          <h3>UGC Radar Agent</h3>
+          <span class="layer">Community</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Find people creating proof: screenshots, "BTCMind caught this", partner mentions, and analyst use cases.</p>
+          </div>
+          <div class="block">
+            <h4>Watch</h4>
+            <ul>
+              <li>BTCMind mentions</li>
+              <li>Product screenshots</li>
+              <li>User wins and avoided-loss stories</li>
+              <li>Partner or integration proof</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Ranked proof queue for Reposter and Quoter.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Only surface proof that shows BTCMind changed understanding or action. Ignore empty praise and generic giveaway behavior."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="action">
+        <div class="top">
+          <h3>Reposter Agent</h3>
+          <span class="layer">Action</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Amplify credible external proof. This is Nansen's community flywheel.</p>
+          </div>
+          <div class="block">
+            <h4>Accept</h4>
+            <ul>
+              <li>User proof with BTCMind output</li>
+              <li>Partner announcement</li>
+              <li>Analyst using BTCMind evidence</li>
+              <li>Founder or ecosystem validation</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Reject</h4>
+            <p>Empty compliments, low-trust token calls, return promises, and posts that imply financial advice.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Repost only when the post is proof BTCMind is useful. If interpretation is needed, send it to Quoter instead."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="action">
+        <div class="top">
+          <h3>Quoter Agent</h3>
+          <span class="layer">Action</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Quote strong external posts when BTCMind can add the missing mechanism or data lens.</p>
+          </div>
+          <div class="block">
+            <h4>Quote When</h4>
+            <ul>
+              <li>There is a counter-signal</li>
+              <li>The post misses a hidden constraint</li>
+              <li>BTCMind can add wallet or flow context</li>
+              <li>Operators need a better metric</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Short quote take with one mechanism and one implication.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Do not agree generically. Translate the source into what builders, traders, or operators should watch."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="action">
+        <div class="top">
+          <h3>Replier Agent</h3>
+          <span class="layer">Action</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Join conversations under target accounts with a useful mechanism or sharp question.</p>
+          </div>
+          <div class="block">
+            <h4>Shapes</h4>
+            <ul>
+              <li>"The hidden constraint is..."</li>
+              <li>"The useful split is..."</li>
+              <li>"This only matters if..."</li>
+              <li>"What would change my mind is..."</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>One or two sentence reply. No generic agreement.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Add one missing mechanism or ask one operator-grade question. If you cannot add either, skip."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="intelligence">
+        <div class="top">
+          <h3>Audience Scout Agent</h3>
+          <span class="layer">Intelligence</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Maintain the target graph: who BTCMind should learn from, reply to, quote, and recruit.</p>
+          </div>
+          <div class="block">
+            <h4>Initial Orbits</h4>
+            <ul>
+              <li>Onchain analysts</li>
+              <li>Hyperliquid/data traders</li>
+              <li>AI-agent crypto builders</li>
+              <li>Base, Virtuals, OKX, Solana, Injective, Mantle-style ecosystems</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Target accounts, community clusters, and priority interaction lists.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Find accounts whose audience overlaps with BTCMind's proof: onchain intelligence, agentic trading, wallet behavior, custody, stablecoins, and market structure."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="intelligence">
+        <div class="top">
+          <h3>Narrative Radar Agent</h3>
+          <span class="layer">Intelligence</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Watch X for narratives BTCMind can explain better than the crowd.</p>
+          </div>
+          <div class="block">
+            <h4>Topics</h4>
+            <ul>
+              <li>BTC ETF and treasury flows</li>
+              <li>Stablecoin payments</li>
+              <li>Wallet UX and custody failures</li>
+              <li>Crypto AI agents</li>
+              <li>Bridge, security, and market-structure risk</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Candidate topics for Signal Source, Quoter, and Replier.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Find high-attention narratives where the crowd is measuring the wrong thing."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="control">
+        <div class="top">
+          <h3>Scheduler Agent</h3>
+          <span class="layer">Control</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Sequence posting, continuation replies, quotes, reposts, and replies without crowding the account.</p>
+          </div>
+          <div class="block">
+            <h4>Starting Windows</h4>
+            <ul>
+              <li>2am PT: data original</li>
+              <li>5am PT: continuation</li>
+              <li>11am-1pm PT: quote or reply</li>
+              <li>5pm-8pm PT: proof repost or second original</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Daily execution plan and caps per category.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Preserve the proof loop. Do not post an original without planning its continuation or proof capture."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="safety">
+        <div class="top">
+          <h3>Safety Gate Agent</h3>
+          <span class="layer">Safety</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Block posts that create reputation, compliance, or trust risk.</p>
+          </div>
+          <div class="block">
+            <h4>Block</h4>
+            <ul>
+              <li>Price targets and guaranteed returns</li>
+              <li>Thin-liquidity token shills</li>
+              <li>Unverified claims about named people or funds</li>
+              <li>Financial advice language</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Require</h4>
+            <p>Evidence, uncertainty, and a next signal to watch.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "If the post cannot show evidence or uncertainty, block it. BTCMind should sound useful, not certain."
+          </div>
+        </div>
+      </article>
+
+      <article class="agent" data-layer="control">
+        <div class="top">
+          <h3>Analytics Learner Agent</h3>
+          <span class="layer">Control</span>
+        </div>
+        <div class="body">
+          <div class="block">
+            <h4>Job</h4>
+            <p>Update templates, timing, and target lists from performance.</p>
+          </div>
+          <div class="block">
+            <h4>Track</h4>
+            <ul>
+              <li>Engagement by template and time</li>
+              <li>Replies and reposts generated</li>
+              <li>UGC created</li>
+              <li>Inbound leads or product usage</li>
+            </ul>
+          </div>
+          <div class="block">
+            <h4>Output</h4>
+            <p>Weekly weights for Poster, Quoter, Replier, and Reposter.</p>
+          </div>
+          <div class="instruction">
+            Tell it: "Reward templates that create downstream proof, not just likes."
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <h2 class="section-title">What BTCMind Should Tell The Agents</h2>
+    <section class="lanes">
+      <div class="panel">
+        <h3>Default Account Personality</h3>
+        <div class="matrix">
+          <div>Identity</div>
+          <div>AI crypto research desk that shows its reasoning and explains both the bull and bear side.</div>
+          <div>Voice</div>
+          <div>Specific, calm, skeptical, mechanism-first, crypto-native without slang overload.</div>
+          <div>Never</div>
+          <div>No price targets, no return promises, no hashtags, no empty hype, no generic agreement.</div>
+          <div>Always</div>
+          <div>Show the hidden constraint, the evidence, or the next signal to watch.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Initial Posting Mix</h3>
+        <div class="matrix">
+          <div>40%</div>
+          <div>Hidden constraint posts: wallet UX, custody, settlement, liquidity, failed assumptions.</div>
+          <div>25%</div>
+          <div>Bull vs bear debate results from BTCMind analyst disagreement.</div>
+          <div>15%</div>
+          <div>Wallet, flow, stablecoin, bridge, ETF, or treasury movement interpretation.</div>
+          <div>10%</div>
+          <div>AI-agent crypto infrastructure posts.</div>
+          <div>10%</div>
+          <div>Community proof, user wins, and partner/product proof.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

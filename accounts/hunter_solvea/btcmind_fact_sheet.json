@@ -1,0 +1,31 @@
+{
+  "updated_at": "2026-06-06",
+  "brand": "BTCMind",
+  "builder_input_available": false,
+  "instructions": "Autonomous runners may only use public claims listed in allowed_claims. Empty product capability lists mean product claims must be blocked or sent for human approval.",
+  "allowed_claims": [
+    {
+      "id": "brand_identity",
+      "claim": "BTCMind is operated as a crypto product/operator X account.",
+      "allowed_phrases": [
+        "BTCMind",
+        "crypto product/operator account",
+        "crypto operator account"
+      ],
+      "expires_at": null
+    }
+  ],
+  "allowed_integrations": [],
+  "allowed_product_status": [],
+  "allowed_performance_claims": [],
+  "allowed_user_claims": [],
+  "requires_builder_input": [
+    "product live status",
+    "TestFlight or beta availability",
+    "OKX or exchange integration",
+    "execution, DCA, grid, or order routing",
+    "agent count, confidence scores, verdicts, or product architecture",
+    "market calls, wins, or prediction accuracy",
+    "users, revenue, AUM, waitlist, pricing, docs, screenshots, or roadmap"
+  ]
+}

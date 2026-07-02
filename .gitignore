@@ -1,0 +1,61 @@
+# Secrets and local environment
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# macOS/editor noise
+.DS_Store
+**/.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python/build artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Browser/session data
+chrome-profiles/
+
+# Runtime state, logs, queues, locks, analytics exports
+state/
+logs/
+*.log
+*.err
+*.out
+downloads/
+
+# Large/generated media
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# Local archives/snapshots
+archive/
+backups/
+*.zip
+
+# Local tool state
+**/.claude/settings.local.json
+**/.rustdesk_*

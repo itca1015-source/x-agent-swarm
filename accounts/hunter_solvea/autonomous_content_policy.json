@@ -1,0 +1,281 @@
+{
+  "approved_at": "2026-06-06",
+  "account": "hunter_solvea",
+  "brand": "BTCMind",
+  "status": "approved_without_builder_input",
+  "operating_rule": "BTCMind public actions require human approval. Automation may draft replies, quotes, repost candidates, and originals for review, but must not publish through browser automation. Approved content cannot claim product readiness, integrations, user results, performance, or roadmap without a current fact-sheet entry.",
+  "autonomy": {
+    "reply": "human_approval_required",
+    "quote": "human_approval_required",
+    "repost": "human_approval_required",
+    "original": "human_approval_required"
+  },
+  "fact_sheet_path": "accounts/hunter_solvea/btcmind_fact_sheet.json",
+  "product_claim_state": {
+    "builder_input_available": false,
+    "allowed_product_claims": [],
+    "blocked_product_claims": [
+      "BTCMind is live",
+      "BTCMind is available in TestFlight, beta, app store, web app, or production",
+      "BTCMind executes trades, DCA, grids, orders, routing, or OKX actions",
+      "BTCMind supports OKX or any other integration",
+      "BTCMind has agents producing live verdicts, calls, scores, or confidence numbers",
+      "BTCMind called, caught, flagged, predicted, or generated any market win",
+      "BTCMind has users, customers, AUM, revenue, usage, screenshots, waitlist, pricing, docs, or launch date",
+      "BTCMind guarantees, improves, or automates trading performance"
+    ]
+  },
+  "allowed_reply_categories": [
+    "bitcoin_adoption_mechanism",
+    "stablecoin_payment_mechanism",
+    "onchain_analytics_observation",
+    "wallet_ux_or_custody_failure_mode",
+    "security_or_scam_prevention",
+    "market_structure_observation",
+    "crypto_ai_operator_commentary",
+    "product_operator_question"
+  ],
+  "allowed_quote_categories": [
+    "public_market_structure_signal",
+    "public_wallet_or_security_signal",
+    "public_stablecoin_or_payment_signal",
+    "public_crypto_ai_signal",
+    "operator_lesson_from_source_post",
+    "credible_partner_or_ecosystem_update"
+  ],
+  "allowed_repost_categories": [
+    {
+      "id": "security_warning",
+      "action": "plain_repost_allowed",
+      "signals": [
+        "wallet drain",
+        "phishing",
+        "seed phrase",
+        "scam",
+        "impersonator",
+        "security warning"
+      ]
+    },
+    {
+      "id": "market_structure_public_data",
+      "action": "plain_repost_allowed",
+      "signals": [
+        "Bitcoin ETF flows",
+        "BTC funding",
+        "open interest",
+        "liquidations",
+        "exchange reserves",
+        "stablecoin supply"
+      ]
+    },
+    {
+      "id": "crypto_operator_lesson",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "wallet UX",
+        "custody",
+        "stablecoin payments",
+        "on-chain analytics",
+        "crypto compliance",
+        "AI agent crypto"
+      ]
+    },
+    {
+      "id": "credible_ecosystem_update",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "OKX",
+        "Base",
+        "Solana",
+        "Hyperliquid",
+        "DefiLlama",
+        "Dune",
+        "Arkham",
+        "The Block"
+      ]
+    },
+    {
+      "id": "btcmind_brand_mention",
+      "action": "repost_or_quote_only_if_verified",
+      "verification_required": true,
+      "signals": [
+        "BTCMind"
+      ]
+    }
+  ],
+  "reply_rules": {
+    "max_chars": 240,
+    "must_add": "one concrete mechanism, caveat, operator question, or source-grounded observation",
+    "forbid": [
+      "generic praise",
+      "product pitch unless directly invited",
+      "buy/sell/long/short advice",
+      "profit promises",
+      "hashtags",
+      "unsourced numbers",
+      "mentions"
+    ]
+  },
+  "quote_rules": {
+    "max_chars": 280,
+    "quote_only_if": [
+      "The source post already supplies proof, public data, or a real workflow",
+      "BTCMind can add a public-data, operator, security, or market-structure lens",
+      "The quote does not imply BTCMind product capability"
+    ],
+    "forbid": [
+      "competitor dunking",
+      "unverified rumor amplification",
+      "price targets",
+      "token shilling",
+      "unsourced numbers",
+      "product claims not in fact sheet"
+    ],
+    "auto_post_allowed": false
+  },
+  "repost_rules": {
+    "plain_repost_only": true,
+    "max_reposts_per_run": 3,
+    "max_reposts_per_author_per_week": 1,
+    "minimum_likes": 25,
+    "maximum_age_minutes": 720,
+    "approved_action": "human_approval_required"
+  },
+  "hard_blocks": [
+    "guaranteed return",
+    "can't lose",
+    "cannot lose",
+    "easy money",
+    "will pump",
+    "moon",
+    "100x",
+    "buy now",
+    "sell now",
+    "long here",
+    "short here",
+    "price target",
+    "signal group",
+    "airdrop",
+    "presale",
+    "claim tokens",
+    "tokenomics",
+    "staking",
+    "financial advice",
+    "competitor disparagement",
+    "political bait unrelated to crypto market structure",
+    "made-up numbers",
+    "private observations framed as facts"
+  ],
+  "blocked_regex": [
+    "\\b(btcmind|we|our agents?|the agents?)\\b.{0,80}\\b(live|launched|available|testflight|beta|app store|waitlist|users?|customers?|screenshots?|pricing|docs|roadmap)\\b",
+    "\\b(btcmind|we|our agents?|the agents?)\\b.{0,80}\\b(execute|execution|trade|trades|dca|grid|orders?|okx|integration|routes?|delegate|delegated)\\b",
+    "\\b(btcmind|we|our agents?|the agents?)\\b.{0,80}\\b(called|caught|flagged|predicted|verdict|confidence|score|signal)\\b",
+    "\\b(buy|sell|long|short|entry|exit|take profit|stop loss)\\b.{0,40}\\b(btc|bitcoin|\\$btc)\\b",
+    "\\b(btc|bitcoin|\\$btc)\\b.{0,40}\\b(to|above|below|hits?|will reach)\\s+\\$?\\d",
+    "\\b(ai-powered|agentic|autonomous ai agents?)\\b.{0,100}\\b(trad(e|ing)|futures|spot|strategy|24/7)\\b",
+    "\\b(deploy|launch)\\b.{0,80}\\b(autonomous ai agents?|trading agents?)\\b",
+    "\\b(banger week|ecosystem growth|major updates?|core features?|all in one|sleek application)\\b",
+    "\\b(dumping|dumped|preparing to dump|intent to sell|buying the dip)\\b",
+    "\\b(shorted|shorting|flipped long|long position|liquidation king|liquidation price|unrealized profit)\\b",
+    "\\b(perps?|futures|spot)\\b.{0,100}\\b(profit|loss|liquidat|long|short|trade|trading)\\b",
+    "\\b(we['’]re excited|we just added|today we['’]re launching|we['’]re launching)\\b",
+    "\\b(data partnership|our research team wrote|check it out below|check out the full article|complete guide)\\b",
+    "\\b(trade where you research|now trade here too|how to use [A-Za-z0-9_ ]+)\\b"
+  ],
+  "approved_search_queries": [
+    "\"BTC\" \"funding rate\"",
+    "\"Bitcoin\" \"open interest\"",
+    "\"BTC\" liquidations",
+    "\"Bitcoin ETF\" flows",
+    "\"stablecoin\" payments",
+    "\"onchain\" analytics",
+    "\"wallet drain\"",
+    "\"seed phrase\"",
+    "\"crypto security\"",
+    "\"wallet UX\" crypto",
+    "\"crypto AI\"",
+    "\"AI agent\" crypto",
+    "\"custody\" bitcoin",
+    "\"exchange reserves\""
+  ],
+  "approved_source_clusters": {
+    "security_and_research": [
+      "zachxbt",
+      "lopp",
+      "OnchainLens",
+      "lookonchain"
+    ],
+    "data_and_analytics": [
+      "Dune",
+      "DefiLlama",
+      "tokenterminal",
+      "arkham",
+      "glassnode",
+      "nansen_ai"
+    ],
+    "news_and_market_structure": [
+      "TheBlock__",
+      "WuBlockchain",
+      "nic__carter",
+      "joemccann",
+      "QwQiao"
+    ],
+    "ecosystem_accounts": [
+      "okx",
+      "base",
+      "solana",
+      "HyperliquidX",
+      "JupiterExchange"
+    ]
+  },
+  "cadence": {
+    "autonomous_replies_per_day": [
+      0,
+      0
+    ],
+    "quote_drafts_for_approval_per_day": [
+      1,
+      3
+    ],
+    "quote_approvals_per_week": [
+      3,
+      7
+    ],
+    "autonomous_reposts_per_day": [
+      0,
+      0
+    ],
+    "autonomous_reposts_per_week": [
+      0,
+      0
+    ],
+    "minimum_hours_between_reposts": 2,
+    "original_post_drafts_per_day": [
+      0,
+      1
+    ],
+    "original_post_approvals_per_week": [
+      3,
+      5
+    ],
+    "preferred_schedule": "weekday-heavy; lighter on weekends; avoid burst posting",
+    "repost_mix": {
+      "market_structure": 40,
+      "security_and_wallet_ux": 30,
+      "ecosystem_and_data_infra": 20,
+      "crypto_ai_operator": 10
+    },
+    "quote_mix": {
+      "btc_market_structure": 50,
+      "wallet_security": 25,
+      "stablecoin_payment_operator": 15,
+      "crypto_ai": 10
+    }
+  },
+  "approval_gates": {
+    "reply": "human_approval_required",
+    "quote": "human_approval_required",
+    "repost": "human_approval_required",
+    "original": "human_approval_required"
+  }
+}

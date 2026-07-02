@@ -1,0 +1,377 @@
+{
+  "approved_at": "2026-06-06",
+  "account": "flatkey",
+  "status": "approved_without_builder_input",
+  "operating_rule": "Until builder input arrives, Flatkey operates as a category-native AI agent infrastructure account. It can educate, ask, repost, and quote public signals about agent workflows, tooling, cost/routing, local runtimes, security, and payments, but it cannot claim product capabilities or offer access.",
+  "product_claim_state": {
+    "builder_input_available": false,
+    "allowed_product_claims": [],
+    "blocked_product_claims": [
+      "Flatkey is live",
+      "Flatkey saves a specific percent or dollar amount",
+      "Flatkey supports any provider, model, tool, API, or integration",
+      "Flatkey has credits, API keys, a waitlist, or access available",
+      "Flatkey ran a benchmark unless the benchmark exists and can be attached",
+      "Flatkey has customers, users, usage volume, or product results",
+      "Flatkey has a roadmap, launch date, pricing, docs, or screenshots"
+    ]
+  },
+  "allowed_original_categories": [
+    {
+      "id": "llm_cost_mental_model",
+      "description": "Explain how builders should think about LLM spend.",
+      "safe_angles": [
+        "cost per completed task",
+        "failure cost versus token price",
+        "cheap model becoming expensive after retries",
+        "workflow cost instead of isolated call cost"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "agent_spend_failure_mode",
+      "description": "Explain where agent workflows waste budget.",
+      "safe_angles": [
+        "context bloat",
+        "retry loops",
+        "planning passes",
+        "tool-call chains",
+        "long chat histories",
+        "frontier model overuse",
+        "bad fallback behavior"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "routing_heuristic",
+      "description": "Give general routing heuristics without claiming Flatkey functionality.",
+      "safe_angles": [
+        "task risk",
+        "failure cost",
+        "context size",
+        "latency tolerance",
+        "verification burden",
+        "strong model for uncertain steps",
+        "cheaper model for bounded or formatting steps"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "coding_agent_cost",
+      "description": "Discuss token spend, credits, rate limits, or context growth in coding-agent workflows.",
+      "safe_sources": [
+        "Claude Code",
+        "Cursor",
+        "OpenClaw",
+        "Replit",
+        "Bolt",
+        "v0",
+        "Devin"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "agent_infrastructure_operations",
+      "description": "Comment on infrastructure that makes AI agents operational.",
+      "safe_angles": [
+        "MCP and tool access",
+        "browser and computer use",
+        "local runtimes",
+        "background daemons",
+        "memory and tracing",
+        "evals for agent workflows",
+        "human approval loops"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "agent_trust_and_permissions",
+      "description": "Discuss where autonomous agents need permissions, policy, and security controls.",
+      "safe_angles": [
+        "OAuth and delegated access",
+        "sandboxing",
+        "secret handling",
+        "prompt injection",
+        "approval gates",
+        "auditable tool calls"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "agent_payments_and_metering",
+      "description": "Discuss agent payments as infrastructure for API and service access.",
+      "safe_angles": [
+        "usage-based APIs",
+        "x402",
+        "micropayments",
+        "metering",
+        "billing",
+        "agent wallets for service access"
+      ],
+      "forbid": "token speculation, token utility, staking, governance, airdrops, or trading calls",
+      "builder_input_required": false
+    },
+    {
+      "id": "public_model_pricing_commentary",
+      "description": "Comment on public model, pricing, context, or tier changes.",
+      "source_requirement": "official_or_credible_public_source",
+      "must_include": "cost_or_routing_implication",
+      "builder_input_required": false
+    },
+    {
+      "id": "builder_audience_discovery",
+      "description": "Ask builders to reveal spend, stack, routing, context, rate-limit, or credit pain.",
+      "safe_angles": [
+        "where tokens leak",
+        "current model stack",
+        "surprising cost workflow",
+        "biggest rate-limit bottleneck",
+        "context versus retries versus tool calls"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "cost_resource",
+      "description": "Create simple educational resources that do not imply a Flatkey product feature.",
+      "safe_angles": [
+        "token leak checklist",
+        "cost-per-task worksheet",
+        "routing checklist",
+        "spend logging questions"
+      ],
+      "builder_input_required": false
+    },
+    {
+      "id": "public_observation_roundup",
+      "description": "Summarize public builder pain seen in logged posts.",
+      "source_requirement": "logged_public_samples",
+      "forbid": "invented metrics",
+      "builder_input_required": false
+    }
+  ],
+  "allowed_repost_categories": [
+    {
+      "id": "builder_cost_complaint",
+      "action": "plain_repost_allowed",
+      "signals": [
+        "LLM spend",
+        "API credits",
+        "rate limits",
+        "context window",
+        "Claude Code limits",
+        "token usage"
+      ]
+    },
+    {
+      "id": "official_model_or_tool_update",
+      "action": "plain_repost_allowed",
+      "signals": [
+        "model launch",
+        "pricing change",
+        "context-window change",
+        "service-tier change",
+        "rate-limit change"
+      ]
+    },
+    {
+      "id": "credible_benchmark",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "model comparison",
+        "cost benchmark",
+        "latency benchmark",
+        "routing benchmark"
+      ]
+    },
+    {
+      "id": "open_source_cost_or_routing_tool",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "routing",
+        "logging",
+        "tracing",
+        "prompt caching",
+        "evals",
+        "gateway"
+      ]
+    },
+    {
+      "id": "real_coding_agent_workflow",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "cost visible",
+        "context visible",
+        "routing visible",
+        "credits visible",
+        "rate limits visible"
+      ]
+    },
+    {
+      "id": "agent_infra_shift",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "MCP",
+        "tool use",
+        "computer use",
+        "browser use",
+        "local runtime",
+        "memory",
+        "tracing",
+        "evals",
+        "sandboxing",
+        "approval workflows"
+      ]
+    },
+    {
+      "id": "agent_payments_infra",
+      "action": "plain_repost_or_quote_candidate",
+      "signals": [
+        "x402",
+        "micropayments",
+        "usage-based billing",
+        "metering",
+        "agent wallets",
+        "pay-per-use APIs"
+      ]
+    }
+  ],
+  "quote_rules": {
+    "quote_only_if": [
+      "The source post already supplies proof, news, or a real workflow",
+      "Flatkey can add a specific agent-infrastructure, operator-workflow, cost/routing, security, or payment mechanism",
+      "The quote does not imply Flatkey product capability"
+    ],
+    "good_shapes": [
+      "The hidden cost here is not the first model call. It is the retries after the agent loses context.",
+      "This is where routing gets practical: use the expensive model for the uncertain step, not the whole workflow.",
+      "The benchmark I would want is cost per accepted PR, not cost per 1M tokens.",
+      "The hard part is not tool access. It is permissioning the action once the agent can actually do it.",
+      "Agent payments only get interesting when the agent can decide, verify, and pay inside the same workflow."
+    ],
+    "auto_post_allowed": false,
+    "review_required_days": 7
+  },
+  "hard_blocks": [
+    "token shilling",
+    "crypto-token utility",
+    "staking",
+    "governance",
+    "marketplace discourse",
+    "airdrops",
+    "tokenomics",
+    "direct competitor dunking",
+    "generic AI hype unrelated to cost or routing",
+    "generic AI hype unrelated to agent infrastructure",
+    "shallow ChatGPT tips",
+    "made-up numbers",
+    "customer claims",
+    "private observations framed as facts"
+  ],
+  "cadence": {
+    "first_14_days": {
+      "original_post_drafts_per_day": 2,
+      "plain_repost_candidates_per_day": [
+        5,
+        10
+      ],
+      "quote_candidates_per_day": [
+        2,
+        4
+      ],
+      "reply_target_per_day": [
+        15,
+        30
+      ]
+    },
+    "weekly_mix": {
+      "llm_cost_or_routing_education": 4,
+      "builder_question_or_pain_discovery": 3,
+      "public_model_or_pricing_commentary": 2,
+      "checklist_or_resource": 2,
+      "public_pain_roundup": 1
+    }
+  },
+  "approved_search_queries": [
+    "\"token cost\"",
+    "\"LLM cost\"",
+    "\"API credits\"",
+    "\"Claude Code\" tokens",
+    "\"Claude Code\" limit",
+    "\"context window\"",
+    "\"model routing\"",
+    "\"LLM routing\"",
+    "\"prompt caching\"",
+    "\"tool calls\" \"LLM\"",
+    "\"coding agent\" \"cost\"",
+    "\"OpenRouter\" pricing",
+    "\"OpenRouter\" router",
+    "\"AI agent\" \"token cost\"",
+    "\"AI agent\" \"MCP\"",
+    "\"computer use\" \"AI agent\"",
+    "\"browser use\" \"AI agent\"",
+    "\"agent runtime\"",
+    "\"local agent\"",
+    "\"prompt injection\" \"agent\"",
+    "\"x402\" \"agent\"",
+    "\"micropayments\" \"AI agent\""
+  ],
+  "approved_source_clusters": {
+    "official_model_tool_accounts": [
+      "OpenRouter",
+      "claudeai",
+      "cursor_ai",
+      "openclaw",
+      "Replit",
+      "boltdotnew",
+      "windsurf_ai",
+      "vercel",
+      "OpenAI",
+      "AnthropicAI",
+      "GoogleDeepMind"
+    ],
+    "infra_analysis_accounts": [
+      "LiteLLM",
+      "HeliconeAI",
+      "PortkeyAI",
+      "RequestyAI",
+      "KeywordsAI",
+      "notdiamond",
+      "MartianRouter",
+      "ArtificialAnlys"
+    ],
+    "agent_infra_accounts": [
+      "LangChainAI",
+      "llama_index",
+      "browserbasehq",
+      "ComposioHQ",
+      "modelcontext",
+      "CloudflareDev",
+      "github",
+      "Docker"
+    ],
+    "agent_payments_accounts": [
+      "coinbaseDev",
+      "CoinbaseWallet",
+      "base",
+      "circle",
+      "PayAINetwork"
+    ]
+  },
+  "approval_gates": {
+    "plain_repost_from_approved_categories": "autonomous_allowed",
+    "original_posts_first_week": "human_review",
+    "quote_posts_first_week": "human_review",
+    "any_flatkey_product_claim": "human_review",
+    "any_numerical_claim": "requires_source_or_human_review",
+    "any_conversion_cta": "builder_input_required"
+  },
+  "metrics": [
+    "profile_visits_from_ai_builders",
+    "builder_replies_about_stack_or_spend",
+    "follows_from_target_cluster",
+    "quote_repost_engagement",
+    "recurring_public_pain_terms",
+    "users_tagging_flatkey_into_cost_or_routing_conversations",
+    "users_tagging_flatkey_into_agent_runtime_security_or_payment_conversations"
+  ]
+}
