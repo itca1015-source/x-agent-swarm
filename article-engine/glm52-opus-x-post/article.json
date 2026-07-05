@@ -1,0 +1,365 @@
+{
+  "page_title": "The Model Is Becoming a Replaceable Part",
+  "headline": "The Model Is Becoming a Replaceable Part",
+  "body": [
+    {
+      "type": "p",
+      "text": "I thought this was going to be another model fight."
+    },
+    {
+      "type": "p",
+      "text": "GLM-5.2 vs Opus. Forty demos. Some pretty charts. A winner at the end."
+    },
+    {
+      "type": "p",
+      "text": "Then I noticed the weird part."
+    },
+    {
+      "type": "p",
+      "text": "GLM was running inside Claude Code."
+    },
+    {
+      "type": "p",
+      "text": "Not next to it. Inside it."
+    },
+    {
+      "type": "p",
+      "text": "The tool was Anthropic's. The interface was Anthropic's. The workflow was Anthropic's."
+    },
+    {
+      "type": "p",
+      "text": "But the brain underneath was GLM."
+    },
+    {
+      "type": "p",
+      "text": "That is the part that should make closed-model companies nervous."
+    },
+    {
+      "type": "image",
+      "src": "assets/shell-vs-brain.png",
+      "label": "Shell versus brain",
+      "alt": "Diagram showing Claude Code as the shell and GLM as a replaceable model brain"
+    },
+    {
+      "type": "p",
+      "text": "For years, the comforting story was simple: users are sticky."
+    },
+    {
+      "type": "p",
+      "text": "They like the product. They like the workflow. They get used to the shortcuts, the buttons, the way the tool feels."
+    },
+    {
+      "type": "p",
+      "text": "So even if another model gets close, it does not matter. The experience is the moat."
+    },
+    {
+      "type": "p",
+      "text": "But what if the experience can just swap brains?"
+    },
+    {
+      "type": "p",
+      "text": "That is what Nick Saraev showed."
+    },
+    {
+      "type": "p",
+      "text": "He pointed Claude Code at GLM's endpoint using anthropic_base_url. The shell stayed the same. The model changed."
+    },
+    {
+      "type": "p",
+      "text": "Small trick. Big implication."
+    },
+    {
+      "type": "p",
+      "text": "People may love Claude Code. That does not mean they are loyal to the exact model behind Claude Code."
+    },
+    {
+      "type": "p",
+      "text": "The shell is one layer. The brain is another."
+    },
+    {
+      "type": "p",
+      "text": "And once people really feel that split, the model starts looking less like the product."
+    },
+    {
+      "type": "p",
+      "text": "It starts looking like a part."
+    },
+    {
+      "type": "p",
+      "text": "A very important part, yes. But still a part."
+    },
+    {
+      "type": "p",
+      "text": "Now the model test matters."
+    },
+    {
+      "type": "p",
+      "text": "Nick ran Opus 4.8 and GLM-5.2 through more than forty practical tasks: 3D scenes, dashboards, explainers, landing pages, small games."
+    },
+    {
+      "type": "p",
+      "text": "The interesting choice: he did not grade them by benchmarks."
+    },
+    {
+      "type": "p",
+      "text": "Because at that level, the benchmark scores are already too close to be useful."
+    },
+    {
+      "type": "p",
+      "text": "That alone is a little strange. We spent the last few years treating leaderboards like sports scores."
+    },
+    {
+      "type": "p",
+      "text": "Model A is up 0.4 points. Model B is cooked. New king. New discourse. Repeat forever."
+    },
+    {
+      "type": "p",
+      "text": "But when the scores flatten, the scoreboard stops helping."
+    },
+    {
+      "type": "p",
+      "text": "So Nick judged taste."
+    },
+    {
+      "type": "p",
+      "text": "Does the output feel right? Is it readable? Is it restrained? Did the model know when to stop?"
+    },
+    {
+      "type": "image",
+      "src": "assets/benchmark-to-taste.png",
+      "label": "Benchmark to taste",
+      "alt": "Editorial card showing that when benchmark scores flatten, taste becomes the deciding layer"
+    },
+    {
+      "type": "p",
+      "text": "This is where GLM surprised me."
+    },
+    {
+      "type": "p",
+      "text": "In the galaxy demo, Opus made the thing so bright it was almost blown out. GLM's version was cleaner and easier to control."
+    },
+    {
+      "type": "p",
+      "text": "In the rainbow explainer, GLM's layout felt calmer. Opus looked like it was trying a little too hard."
+    },
+    {
+      "type": "p",
+      "text": "Same pattern in terrain, landing pages, and other visual tasks."
+    },
+    {
+      "type": "p",
+      "text": "GLM had better taste more often than I expected."
+    },
+    {
+      "type": "p",
+      "text": "But not everywhere."
+    },
+    {
+      "type": "p",
+      "text": "In the block-stacking game, GLM lost. The game ran, but it moved too fast and fell apart almost immediately."
+    },
+    {
+      "type": "p",
+      "text": "Opus made the more playable version."
+    },
+    {
+      "type": "p",
+      "text": "That split is useful."
+    },
+    {
+      "type": "p",
+      "text": "Opus looked stronger on logic and constraints. GLM looked stronger on taste and feel."
+    },
+    {
+      "type": "p",
+      "text": "That is not a clean sweep. It is more interesting than a clean sweep."
+    },
+    {
+      "type": "image",
+      "src": "assets/taste-split.png",
+      "label": "Taste split",
+      "alt": "Comparison card showing GLM stronger at visual taste and Opus stronger at constraints"
+    },
+    {
+      "type": "p",
+      "text": "Now add price."
+    },
+    {
+      "type": "p",
+      "text": "This is where the story stops being cute."
+    },
+    {
+      "type": "p",
+      "text": "If one model is a little worse in some places, a little better in others, and costs a fraction of the price, the buyer's brain changes."
+    },
+    {
+      "type": "p",
+      "text": "Nick framed GLM as roughly one fifth the cost of Opus for this kind of work."
+    },
+    {
+      "type": "p",
+      "text": "That is not a discount. That is a weapon."
+    },
+    {
+      "type": "p",
+      "text": "You can get to it through z.ai. Or through OpenRouter. Or through hosted providers like Fireworks and DeepInfra."
+    },
+    {
+      "type": "p",
+      "text": "The more places you can buy the same intelligence, the harder it is to keep the price high."
+    },
+    {
+      "type": "p",
+      "text": "At some point, cheap stops meaning worse."
+    },
+    {
+      "type": "p",
+      "text": "It starts meaning dangerous."
+    },
+    {
+      "type": "image",
+      "src": "assets/price-as-weapon.png",
+      "label": "Price as weapon",
+      "alt": "Card showing that once capability is close, lower price becomes a strategic weapon"
+    },
+    {
+      "type": "p",
+      "text": "Then there is the ownership part."
+    },
+    {
+      "type": "p",
+      "text": "This is the piece most people skip because it sounds less fun than model drama."
+    },
+    {
+      "type": "p",
+      "text": "But it matters more."
+    },
+    {
+      "type": "p",
+      "text": "The full GLM-5.2 is huge: 700 billion parameters. You are not casually running that on a laptop."
+    },
+    {
+      "type": "p",
+      "text": "But quantized versions change the question."
+    },
+    {
+      "type": "p",
+      "text": "Nick points to a 2-bit version that cuts the model down dramatically, keeps much of the accuracy, and can fit on a 256 GB Mac."
+    },
+    {
+      "type": "p",
+      "text": "The important line is simple: if the model runs on your machine, nobody can take it away without taking the machine too."
+    },
+    {
+      "type": "p",
+      "text": "An API can disappear. Pricing can change. A feature can get policy'd out of existence."
+    },
+    {
+      "type": "p",
+      "text": "A local model is not magic. It can be slower. It can be worse. It can be annoying."
+    },
+    {
+      "type": "p",
+      "text": "But it belongs to you in a way rented intelligence does not."
+    },
+    {
+      "type": "image",
+      "src": "assets/ownership-layer.png",
+      "label": "Ownership layer",
+      "alt": "Comparison card showing API intelligence as rented and local intelligence as owned"
+    },
+    {
+      "type": "p",
+      "text": "So what is the moat now?"
+    },
+    {
+      "type": "p",
+      "text": "It is not gone. That would be too easy."
+    },
+    {
+      "type": "p",
+      "text": "It is moving."
+    },
+    {
+      "type": "p",
+      "text": "If models get close enough, open enough, and cheap enough, the fight moves outside the model."
+    },
+    {
+      "type": "p",
+      "text": "It moves to taste. Price. Reliability. Latency. Ownership. UX."
+    },
+    {
+      "type": "p",
+      "text": "It moves to the thing around the model."
+    },
+    {
+      "type": "p",
+      "text": "That is why Claude Code matters in this story."
+    },
+    {
+      "type": "p",
+      "text": "The product people love may be the harness, not the model."
+    },
+    {
+      "type": "p",
+      "text": "And if the harness can swap models, the model provider has a problem."
+    },
+    {
+      "type": "image",
+      "src": "assets/moat-shift.png",
+      "label": "Moat shift",
+      "alt": "Diagram showing model competition shifting from raw capability to taste, cost, reliability, ownership, and UX"
+    },
+    {
+      "type": "p",
+      "text": "The practical takeaway is boring, which usually means it is useful."
+    },
+    {
+      "type": "p",
+      "text": "Do not marry one remote brain."
+    },
+    {
+      "type": "p",
+      "text": "Use the strongest cheap model that works. Keep another one ready. And if a workflow is truly core to your business, keep a path to something you can run yourself."
+    },
+    {
+      "type": "p",
+      "text": "Now, the cold water."
+    },
+    {
+      "type": "p",
+      "text": "Taste is subjective. Nick's prompts were lightweight. Another person could run another set of tasks and get a different result."
+    },
+    {
+      "type": "p",
+      "text": "GLM losing the game demo matters too. Logic and constraints are not side quests. They are the work."
+    },
+    {
+      "type": "p",
+      "text": "And open models still come with friction. In that setup, GLM needed outside tools for search."
+    },
+    {
+      "type": "p",
+      "text": "So no, this does not mean closed models are dead."
+    },
+    {
+      "type": "p",
+      "text": "It means the story changed."
+    },
+    {
+      "type": "p",
+      "text": "The wall did not fall over."
+    },
+    {
+      "type": "p",
+      "text": "Someone found a door in it."
+    }
+  ],
+  "thread": [
+    "1/ The important part is not that GLM-5.2 beat Opus in a taste test. The important part is that it ran inside Claude Code.",
+    "2/ The tool was Anthropic's. The interface was Anthropic's. The workflow was Anthropic's. But the brain underneath was GLM.",
+    "3/ That means the thing users love and the model underneath it are starting to become separate products.",
+    "4/ Once that split is real, the model starts looking less like the product and more like a replaceable part.",
+    "5/ That is why the closed-model moat is getting more interesting. The fight moves to taste, price, reliability, ownership, and UX."
+  ]
+}

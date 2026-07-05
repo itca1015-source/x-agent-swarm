@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --ink: #111827;
+      --muted: #5b6575;
+      --line: #d9dee7;
+      --card: #ffffff;
+      --accent: #0f766e;
+      --good: #166534;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 28px 22px 24px;
+      border-bottom: 4px solid var(--accent);
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 40px); line-height: 1.08; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 18px; letter-spacing: 0; }
+    .sub { color: #c8d1df; max-width: 760px; font-size: 15px; }
+    main { padding: 24px 22px 54px; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+    section, aside {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 16px; }
+    button, .download {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+    }
+    button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .steps { counter-reset: step; margin: 0 0 18px; padding: 0; list-style: none; }
+    .steps > li {
+      counter-increment: step;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 14px 16px 14px 52px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .steps strong { display: block; margin-bottom: 4px; font-size: 14px; }
+    .steps .hint { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+    .image-step {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px dashed var(--line);
+      padding: 10px 0;
+    }
+    .image-step:first-of-type { border-top: 0; }
+    .image-step img {
+      width: 110px;
+      aspect-ratio: 5 / 2;
+      object-fit: cover;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .image-step .meta { flex: 1; min-width: 0; font-size: 13px; }
+    .image-step .meta code {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .headline-box {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+    .paste-article {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.45;
+      user-select: text;
+    }
+    .paste-article p {
+      margin: 0 0 12px;
+      padding: 0;
+    }
+    .paste-article p:last-child { margin-bottom: 0; }
+    .paste-article figure {
+      margin: 14px 0;
+      padding: 0;
+    }
+    .paste-article figcaption {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 0 0;
+    }
+    .paste-article img {
+      display: block;
+      width: 100%;
+      max-width: 1600px;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      background: #f8fafc;
+    }
+    .copybox {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 15px;
+    }
+    .status { font-size: 13px; color: var(--good); min-height: 18px; margin-top: 8px; }
+    .image-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+    .image-card strong { display: block; font-size: 13px; margin: 9px 0 8px; }
+    .image-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tweet {
+      border: 1px solid #d9dee7;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      background: #fbfcfe;
+    }
+    .tweet p { margin: 0 0 10px; }
+    .tweet p:last-child { margin-bottom: 0; }
+    .label {
+      display: inline-flex;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      background: #eef2f7;
+      border-radius: 999px;
+      padding: 3px 8px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems</h1>
+      <div class="sub">Paste-ready X Article: clean paragraph text plus one-click image copying, matched to how the X article editor actually handles pastes.</div>
+    </div>
+  </header>
+  <main>
+    <div class="wrap grid">
+      <section>
+        <h2>Paste into X — 3 steps</h2>
+        <p class="note">X's article editor strips images from pasted HTML and flattens wrapped markup, so text and images go in separately. Follow the steps in order.</p>
+        <ol class="steps">
+          <li>
+            <strong>Title</strong>
+            <p class="hint">Copy the headline, then paste it into the "Add a title" field on X.</p>
+            <button class="primary" data-copy-headline>Copy Headline</button>
+          </li>
+          <li>
+            <strong>Body text</strong>
+            <p class="hint">Copy the article text, click into the X article body, and paste. Text uses balanced paragraph groups: short related blocks use soft line breaks, while real section breaks stay visible. Each image position is marked with a line like <em>[ IMAGE 1 HERE … ]</em>.</p>
+            <button class="primary" data-copy-body>Copy Article Text (with image markers)</button>
+          </li>
+          <li>
+            <strong>Images</strong>
+            <p class="hint">For each image: click <em>Copy Image</em> below, then in X click at the <strong>end of the matching marker line</strong> and paste (⌘V). The image uploads inline right below the marker. Then triple-click the marker line and press ⌫ twice (once for the text, once for the leftover empty line).</p>
+            <div class="image-step">
+              <img src="assets/loop-stages.png" alt="Diagram showing three stages of agent work: line-by-line driving, manual parallelism, and loop authoring">
+              <div class="meta">
+                <strong>Image 1 — Loop engineering maturity curve</strong>
+                <code>[ IMAGE 1 HERE — loop engineering maturity curve ]</code>
+              </div>
+              <button data-copy-image="assets/loop-stages.png" data-image-label="Image 1">Copy Image 1</button>
+            </div>
+            <div class="image-step">
+              <img src="assets/loop-anatomy.png" alt="Diagram showing the five parts of a loop system: heartbeat, work trees, skill, connectors, sub-agents, plus a memory spine">
+              <div class="meta">
+                <strong>Image 2 — Loop system anatomy</strong>
+                <code>[ IMAGE 2 HERE — loop system anatomy ]</code>
+              </div>
+              <button data-copy-image="assets/loop-anatomy.png" data-image-label="Image 2">Copy Image 2</button>
+            </div>
+            <div class="image-step">
+              <img src="assets/goal-vs-loop.png" alt="Comparison diagram explaining that /goal runs until a condition is true while /loop runs a prompt on a schedule">
+              <div class="meta">
+                <strong>Image 3 — /goal vs /loop</strong>
+                <code>[ IMAGE 3 HERE — /goal vs /loop ]</code>
+              </div>
+              <button data-copy-image="assets/goal-vs-loop.png" data-image-label="Image 3">Copy Image 3</button>
+            </div>
+          </li>
+        </ol>
+        <div class="status" id="copyStatus"></div>
+        <h2 style="margin-top:24px;">Preview</h2>
+        <div id="headlineText" class="headline-box">Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems</div>
+        <article id="xArticleBody" class="paste-article">
+          <p>In early June, Peter, the creator of OpenClaw, posted a tweet that reached millions of views within days: you should stop driving agents with prompts, and start designing the loops that drive agents to work.</p>
+          <p>Around the same time, Boris, who works on Claude Code at Anthropic, put it even more directly: he no longer drives Claude Code with prompts. He has a set of loops running, and his job is simply to write loops. Addy Osmani pulled this wave of discussion into one phrase: Loop Engineering.</p>
+          <p>This piece breaks it down: what Loop Engineering is, what a loop system is made of, how normal people can start using it, and most importantly, whether it is actually right for you.</p>
+          <p>From writing prompts to writing loop systems</p>
+          <p>Here is the thesis: Loop Engineering is not another new tool to chase. It is a shift in perspective. You move from “I write prompts to drive agents” to “I design the system that uses prompts to drive agents.”</p>
+          <p>1. First, locate yourself: which stage are you in?</p>
+          <p>The best entry point for understanding Loop Engineering is Boris’s description of how his own workflow changed over the past year. He breaks it into three stages. You can use them to see where you are.</p>
+          <p>Stage one: line-by-line driving. You write code by hand, and the model autocompletes for you. This was the early days: Tab, Tab, Tab.</p>
+          <p>Stage two: manual parallelism. You run 5 or 10 Claude Code sessions at the same time. Each one is working, but every conversation is still initiated by you. You become a dispatcher, switching between multiple windows. Many heavy users are stuck here right now.</p>
+          <p>Stage three: you no longer initiate the conversations. You write a system that reads your repo, reads issues, reads CI failures, and decides for itself what prompts should be used to drive the agents. You move from “the person typing inside the loop” to “the author of the loop.”</p>
+          <p>That third stage is Loop Engineering. You no longer handwrite every prompt. You design the system that writes the prompts for you.</p>
+          <figure data-image-marker="IMAGE 1 HERE — loop engineering maturity curve"><img src="assets/loop-stages.png" alt="Diagram showing three stages of agent work: line-by-line driving, manual parallelism, and loop authoring"><figcaption>Image 1 — pasted separately in step 3</figcaption></figure>
+          <p>2. A loop system is built from 5 parts plus 1 spine</p>
+          <p>Addy Osmani breaks a typical loop system into 5 parts, plus one spine. Let’s walk through them.</p>
+          <p>The first part is the heartbeat. This is a scheduled task. It runs on its own, discovers work on its own, and does not need you to manually trigger it.</p>
+          <p>The second part is the work tree. When multiple agents work at the same time, each one stays in its own isolated branch directory, so they do not step on each other’s files. It is like two engineers working on separate branches, instead of editing the same line at the same time. This is becoming one of the new ways people use git in the AI era.</p>
+          <p>The third part is the skill. You write the project rules and conventions into a SKILL.md file once, and every agent reads it every time.</p>
+          <p>The fourth part is the connector. Through MCP, the agent connects to the tools you actually use: issue trackers, databases, Slack. With connectors, the agent does not just say, “Here is the fix, please open an issue.” It can open the issue, create the pull request, and send the notification itself.</p>
+          <p>The fifth part is the sub-agent. You split coding from reviewing. Osmani has a sharp line here: the model that wrote the code can be too generous when grading its own homework, so you need another agent to critique it.</p>
+          <p>Finally, there is the spine: memory. It might be a simple Markdown file or a Linear board. It records what has been done, what has been tried, and what is still missing outside the conversation itself. The agent forgets, but a persistent system can remember.</p>
+          <figure data-image-marker="IMAGE 2 HERE — loop system anatomy"><img src="assets/loop-anatomy.png" alt="Diagram showing the five parts of a loop system: heartbeat, work trees, skill, connectors, sub-agents, plus a memory spine"><figcaption>Image 2 — pasted separately in step 3</figcaption></figure>
+          <p>3. What one loop actually looks like</p>
+          <p>Once you assemble these pieces, one pass through a loop might look like this: a scheduled job triggers in the morning; a triage skill reads last night’s CI failures and recent commits; every issue that can be handled gets its own work tree; one sub-agent fixes it; another sub-agent reviews it against the skill and the tests; connectors open the pull request and update the ticket; anything the system cannot handle goes into an inbox for you; a state file records everything so tomorrow’s loop can continue.</p>
+          <p>Osmani’s point is that you designed this once. During the loop itself, you did not type a single prompt. The system did the work autonomously.</p>
+          <p>4. This is not just for programmers: a non-code loop</p>
+          <p>When people hear Loop Engineering, they often assume it is only for programmers. It is not. The core idea is this: let a long-running process handle repetitive cognitive work for you. Writing code is only one version of that.</p>
+          <p>To get started, it helps to understand the difference between two Claude Code commands:</p>
+          <p>/goal means “run now until the condition is true.” You give it a goal that can be evaluated as true or false. It executes round after round. At the end of each round, it checks whether the goal has been reached. If not, it keeps going until it finishes.</p>
+          <p>/loop means “run on a schedule.” At the scheduled time, it runs the prompt you gave it again. It does not decide whether the work is complete. It simply executes on time. This is the heartbeat Osmani is talking about.</p>
+          <figure data-image-marker="IMAGE 3 HERE — /goal vs /loop"><img src="assets/goal-vs-loop.png" alt="Comparison diagram explaining that /goal runs until a condition is true while /loop runs a prompt on a schedule"><figcaption>Image 3 — pasted separately in step 3</figcaption></figure>
+          <p>The video shows a very practical non-code loop: topic screening. This is something many content creators do every day.</p>
+          <p>You can create a /loop task that pulls research sources and news from the past 24 hours, finds items that could become deep-dive essays, appends them to inbox.md, then uses a topic-scorer sub-agent to rate each item and write the score back to the inbox. Finally, you schedule it to run every weekday morning at 8.</p>
+          <p>Once it is running, your morning topic inbox no longer contains a pile of raw links. It contains candidates that have already been ranked, with reasons attached. You only need to scan them, decide what deserves attention, and move the best ones into your writing workflow.</p>
+          <p>That is what Loop Engineering looks like when it lands in an ordinary workflow.</p>
+          <p>5. A cold splash of water: is this really for everyone?</p>
+          <p>This is where we need the cold splash of water. One essay puts it bluntly: most developers do not actually need agent loops yet. That is a reasonable take. It gives four tests. If all four are true, then building a loop may be worth it:</p>
+          <p>1. The task repeats at least weekly. One-off work is not worth this setup.<br>2. Verification can be automated. Tests, type checks, linters: these can block bad results without relying on your eyes.<br>3. The token budget can handle it, including waste. Loops repeatedly read context, retry, and explore. Whether the final code is used or not, tokens and money are being spent.<br>4. The agent has the toolkit of a senior engineer. Logs, environments that surface problems, and the ability to run its own code and see where it breaks.</p>
+          <p>Only when all four conditions are met does a loop really make sense.</p>
+          <p>6. Two painful reminders and one failure case</p>
+          <p>Osmani’s article also includes two important warnings.</p>
+          <p>The first: the faster loops ship, the more code exists in your repo that you did not personally write and did not personally read. The gap between what is in the repository and what you truly understand in your head can grow quickly.</p>
+          <p>The second is even sharper: the most dangerous posture is comfortably accepting everything the loop produces. In AI-generated work, the more there is that you do not understand, the more risk you are carrying.</p>
+          <p>There is also a real failure pattern. A well-known looping technique called Ralph is famous for being persistent: it does not give up, and it keeps executing. But it has a failure mode called over-baking. You ask it to fix a small bug. It runs for a long time, then starts adding features nobody asked for, and may even break code that used to compile.</p>
+          <p>An unattended loop is also unattended while it is making mistakes. That means validation is still your responsibility. Even if you turn a workflow into a loop, you need the ability to verify the right things at the right points.</p>
+          <p>Closing: become the person who writes loops</p>
+          <p>Loop Engineering is not another shiny tool to chase. It is a perspective shift: from “I write prompts to drive agents” to “I design the system that uses prompts to drive agents.”</p>
+          <p>And the necessary tools are already in your hands: Claude Code’s /loop command, git work trees, skills that are written once and read every time, and sub-agents working in independent contexts.</p>
+          <p>But do not put a loop around everything on day one. Start with one small task that repeats every week and whose result can be automatically verified. Topic screening is a good example because the execution risk is low.</p>
+          <p>Then remember Osmani’s line: be the person who writes the loop, not the person who only presses start. After writing the loop, we still need the ability to verify it regularly, at the moments where verification actually matters.</p>
+          <p>Sources: 01Coder’s video “Loop Engineering 循环工程”; Addy Osmani’s article on Loop Engineering; public comments from Peter, creator of OpenClaw, and Boris from Anthropic.</p>
+        </article>
+
+      </section>
+      <aside>
+        <h2>Image Assets</h2>
+        <p class="note">Use the step-3 buttons for pasting into X. These are backup download links.</p>
+        <div class="image-card">
+          <img src="assets/loop-stages.png" alt="Diagram showing three stages of agent work: line-by-line driving, manual parallelism, and loop authoring">
+          <strong>Image 1 — Loop engineering maturity curve</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/loop-stages.png" download>Download</a>
+            <button data-open="assets/loop-stages.png">Open</button>
+          </div>
+        </div>
+        <div class="image-card">
+          <img src="assets/loop-anatomy.png" alt="Diagram showing the five parts of a loop system: heartbeat, work trees, skill, connectors, sub-agents, plus a memory spine">
+          <strong>Image 2 — Loop system anatomy</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/loop-anatomy.png" download>Download</a>
+            <button data-open="assets/loop-anatomy.png">Open</button>
+          </div>
+        </div>
+        <div class="image-card">
+          <img src="assets/goal-vs-loop.png" alt="Comparison diagram explaining that /goal runs until a condition is true while /loop runs a prompt on a schedule">
+          <strong>Image 3 — /goal vs /loop</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/goal-vs-loop.png" download>Download</a>
+            <button data-open="assets/goal-vs-loop.png">Open</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    var headline = "Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems";
+
+    function setStatus(message) {
+      var status = document.getElementById("copyStatus");
+      status.textContent = message;
+      setTimeout(function() { status.textContent = ""; }, 3200);
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, function(char) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char];
+      });
+    }
+
+    function normalizePlainText(text) {
+      return text
+        .replace(/\u00a0/g, " ")
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n[ \t]+/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
+    function bodyBlocks() {
+      return Array.from(document.getElementById("xArticleBody").children);
+    }
+
+    // X's article editor (Draft.js) adds large margins between separate
+    // paragraph blocks, but one giant soft-break block feels cramped. Group a
+    // few short related blocks together, while keeping section headings, long
+    // blocks, and image markers as real breaks.
+    function isStandaloneParagraph(text) {
+      return /^\d+\.\s/.test(text) || text.length > 650;
+    }
+
+    function buildBodyHtml() {
+      var html = ["<div>"];
+      var pendingText = [];
+      function flushText() {
+        if (!pendingText.length) { return; }
+        html.push("<p>" + pendingText.join("<br>") + "</p>");
+        pendingText = [];
+      }
+      function pushText(htmlText, plainText) {
+        if (isStandaloneParagraph(plainText)) {
+          flushText();
+          html.push("<p>" + htmlText + "</p>");
+          return;
+        }
+        pendingText.push(htmlText);
+        if (pendingText.length >= 3) {
+          flushText();
+        }
+      }
+      bodyBlocks().forEach(function(el) {
+        if (el.tagName === "P") {
+          var plainText = normalizePlainText(el.innerText);
+          if (plainText) {
+            pushText(plainText.split("\n").map(escapeHtml).join("<br>"), plainText);
+          }
+        }
+        if (el.tagName === "FIGURE") {
+          flushText();
+          html.push("<p>" + escapeHtml("[ " + el.getAttribute("data-image-marker") + " ]") + "</p>");
+        }
+      });
+      flushText();
+      html.push("</div>");
+      return html.join("");
+    }
+
+    function buildBodyPlainText() {
+      var chunks = [];
+      var pendingText = [];
+      function flushText() {
+        if (!pendingText.length) { return; }
+        chunks.push(pendingText.join("\n"));
+        pendingText = [];
+      }
+      function pushText(text) {
+        if (isStandaloneParagraph(text)) {
+          flushText();
+          chunks.push(text);
+          return;
+        }
+        pendingText.push(text);
+        if (pendingText.length >= 3) {
+          flushText();
+        }
+      }
+      bodyBlocks().forEach(function(el) {
+        if (el.tagName === "P") {
+          var text = normalizePlainText(el.innerText);
+          if (text) {
+            pushText(text);
+          }
+        }
+        if (el.tagName === "FIGURE") {
+          flushText();
+          chunks.push("[ " + el.getAttribute("data-image-marker") + " ]");
+        }
+      });
+      flushText();
+      return chunks.filter(Boolean).join("\n\n");
+    }
+
+    async function copyBody() {
+      var plain = buildBodyPlainText();
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          "text/html": new Blob([buildBodyHtml()], { type: "text/html" }),
+          "text/plain": new Blob([plain], { type: "text/plain" })
+        })]);
+        setStatus("Copied article text. Paste into the X article body, then add images (step 3).");
+      } else {
+        await navigator.clipboard.writeText(plain);
+        setStatus("Copied article text (plain). Paste into the X article body.");
+      }
+    }
+
+    function imagePngBlob(src) {
+      return new Promise(function(resolve, reject) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          canvas.getContext("2d").drawImage(img, 0, 0);
+          canvas.toBlob(function(blob) {
+            if (blob) { resolve(blob); } else { reject(new Error("PNG conversion failed")); }
+          }, "image/png");
+        };
+        img.onerror = function() { reject(new Error("Could not load " + src)); };
+        img.src = src;
+      });
+    }
+
+    // Clipboard image writes only accept image/png, and Safari requires the
+    // promise form of ClipboardItem, so the blob promise is passed directly.
+    async function copyImageToClipboard(src, label) {
+      if (!navigator.clipboard || !window.ClipboardItem) {
+        throw new Error("This browser cannot copy images. Use the download link instead.");
+      }
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": imagePngBlob(src) })]);
+      setStatus("Copied " + label + ". In X, click at the end of its marker line and paste (⌘V), then triple-click the marker line and press ⌫ twice.");
+    }
+
+    document.querySelector("[data-copy-body]").addEventListener("click", function() {
+      copyBody().catch(function(error) {
+        setStatus("Copy failed: " + error.message);
+        console.error(error);
+      });
+    });
+
+    document.querySelectorAll("[data-copy-image]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        copyImageToClipboard(btn.getAttribute("data-copy-image"), btn.getAttribute("data-image-label")).catch(function(error) {
+          setStatus("Image copy failed: " + error.message);
+          console.error(error);
+        });
+      });
+    });
+
+    document.querySelector("[data-copy-headline]").addEventListener("click", async function() {
+      await navigator.clipboard.writeText(headline);
+      setStatus("Copied headline. Paste into the X title field.");
+    });
+
+    var threadBtn = document.querySelector("[data-copy-thread]");
+    if (threadBtn) {
+      threadBtn.addEventListener("click", async function() {
+        await navigator.clipboard.writeText(document.getElementById("threadText").textContent.trim());
+        setStatus("Copied thread.");
+      });
+    }
+
+    document.querySelectorAll("[data-open]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        window.open(btn.getAttribute("data-open"), "_blank");
+      });
+    });
+
+    window.__xArticleCopy = {
+      buildBodyHtml: buildBodyHtml,
+      buildBodyPlainText: buildBodyPlainText
+    };
+  </script>
+</body>
+</html>

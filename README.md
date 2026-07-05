@@ -16,6 +16,16 @@ The system helps product teams operate X accounts with a repeatable human-in-the
 
 The goal is not blind auto-posting. The goal is controlled, measurable growth automation that keeps brand voice and reputation intact.
 
+## Start Here: the Article Engine
+
+[`article-engine/`](article-engine/) is the long-form content pipeline behind the founder account this system runs, and the best place to see the whole philosophy working:
+
+- **Output:** 113 posts in the account's first 4 weeks, including 10 long-form X Articles, operated by one person
+- **Quality loop:** drafts are scored by an LLM judge against [18 versioned posting rules](article-engine/POSTING_RULES.md), and every rule traces back to a dated entry in the [feedback log](article-engine/FEEDBACK_LOG.md)
+- **Full projects included:** article source, infographic generators, build scripts, and per-project feedback
+
+The operating principle across this repo: agents run the production line; human time goes to taste — what to test next and what to kill.
+
 ## Featured Product Workspaces
 
 ### Flatkey
@@ -78,6 +88,7 @@ The project separates shared automation from product-specific strategy.
 
 - `accounts/` contains brand playbooks, safety policies, and evaluation rubrics
 - `scripts/` contains discovery, drafting, scoring, queue, approval, and analytics utilities
+- `article-engine/` contains the long-form article pipeline: posting rules, feedback log, template, and example projects
 - `crypto/specs_for_agents/` contains agent spec sheets for a BTCMind-focused agent swarm
 - `docs/` contains architecture notes and decision logs
 

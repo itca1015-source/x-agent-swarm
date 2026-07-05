@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fable 5 World Cup X Article Draft</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --ink: #111827;
+      --muted: #5b6575;
+      --line: #d9dee7;
+      --card: #ffffff;
+      --accent: #0f766e;
+      --good: #166534;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 28px 22px 24px;
+      border-bottom: 4px solid var(--accent);
+    }
+    .wrap { max-width: 1040px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 40px); line-height: 1.08; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 18px; letter-spacing: 0; }
+    .sub { color: #c8d1df; max-width: 760px; font-size: 15px; }
+    main { padding: 24px 22px 54px; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+    section, aside {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 16px; }
+    button, .download {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+    }
+    button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .steps { counter-reset: step; margin: 0 0 18px; padding: 0; list-style: none; }
+    .steps > li {
+      counter-increment: step;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 14px 16px 14px 52px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .steps strong { display: block; margin-bottom: 4px; font-size: 14px; }
+    .steps .hint { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+    .image-step {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px dashed var(--line);
+      padding: 10px 0;
+    }
+    .image-step:first-of-type { border-top: 0; }
+    .image-step img {
+      width: 110px;
+      aspect-ratio: 5 / 2;
+      object-fit: cover;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .image-step .meta { flex: 1; min-width: 0; font-size: 13px; }
+    .image-step .meta code {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .headline-box {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+    .paste-article {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 15px;
+      line-height: 1.45;
+      user-select: text;
+    }
+    .paste-article p {
+      margin: 0 0 12px;
+      padding: 0;
+    }
+    .paste-article p:last-child { margin-bottom: 0; }
+    .paste-article figure {
+      margin: 14px 0;
+      padding: 0;
+    }
+    .paste-article figcaption {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 0 0;
+    }
+    .paste-article img {
+      display: block;
+      width: 100%;
+      max-width: 1600px;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      background: #f8fafc;
+    }
+    .copybox {
+      border: 1px solid #cdd5e0;
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 15px;
+    }
+    .status { font-size: 13px; color: var(--good); min-height: 18px; margin-top: 8px; }
+    .image-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+    .image-card strong { display: block; font-size: 13px; margin: 9px 0 8px; }
+    .image-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tweet {
+      border: 1px solid #d9dee7;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      background: #fbfcfe;
+    }
+    .tweet p { margin: 0 0 10px; }
+    .tweet p:last-child { margin-bottom: 0; }
+    .label {
+      display: inline-flex;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      background: #eef2f7;
+      border-radius: 999px;
+      padding: 3px 8px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Fable 5 World Cup X Article Draft</h1>
+      <div class="sub">Paste-ready X Article: clean paragraph text plus one-click image copying, matched to how the X article editor actually handles pastes.</div>
+    </div>
+  </header>
+  <main>
+    <div class="wrap grid">
+      <section>
+        <h2>Paste into X — 3 steps</h2>
+        <p class="note">X's article editor strips images from pasted HTML and flattens wrapped markup, so text and images go in separately. Follow the steps in order.</p>
+        <ol class="steps">
+          <li>
+            <strong>Title</strong>
+            <p class="hint">Copy the headline, then paste it into the "Add a title" field on X.</p>
+            <button class="primary" data-copy-headline>Copy Headline</button>
+          </li>
+          <li>
+            <strong>Body text</strong>
+            <p class="hint">Copy the article text, click into the X article body, and paste. Each article <em>p</em> block becomes its own X paragraph block. Newlines inside a single <em>p</em> stay as soft line breaks. Each image position is marked with a line like <em>[ IMAGE 1 HERE … ]</em>.</p>
+            <button class="primary" data-copy-body>Copy Article Text (with image markers)</button>
+          </li>
+          <li>
+            <strong>Images</strong>
+            <p class="hint">For each image: click <em>Copy Image</em> below, then in X click at the <strong>end of the matching marker line</strong> and paste (⌘V). The image uploads inline right below the marker. Then triple-click the marker line and press ⌫ twice (once for the text, once for the leftover empty line).</p>
+            <div class="image-step">
+              <img src="assets/reasoning-stack.jpeg" alt="Fable 5 reasoning stack data card">
+              <div class="meta">
+                <strong>Image 1 — Reasoning stack</strong>
+                <code>[ IMAGE 1 HERE — reasoning stack ]</code>
+              </div>
+              <button data-copy-image="assets/reasoning-stack.jpeg" data-image-label="Image 1">Copy Image 1</button>
+            </div>
+            <div class="image-step">
+              <img src="assets/favorite-math.jpeg" alt="World Cup favorite math data card">
+              <div class="meta">
+                <strong>Image 2 — Favorite math</strong>
+                <code>[ IMAGE 2 HERE — favorite math ]</code>
+              </div>
+              <button data-copy-image="assets/favorite-math.jpeg" data-image-label="Image 2">Copy Image 2</button>
+            </div>
+            <div class="image-step">
+              <img src="assets/fable5-forecast.jpeg" alt="Fable 5 World Cup probability forecast">
+              <div class="meta">
+                <strong>Image 3 — Forecast distribution</strong>
+                <code>[ IMAGE 3 HERE — forecast distribution ]</code>
+              </div>
+              <button data-copy-image="assets/fable5-forecast.jpeg" data-image-label="Image 3">Copy Image 3</button>
+            </div>
+          </li>
+        </ol>
+        <div class="status" id="copyStatus"></div>
+        <h2 style="margin-top:24px;">Preview</h2>
+        <div id="headlineText" class="headline-box">I Asked Fable 5 to Predict the 2026 World Cup. It Refused to Give Me One Winner.</div>
+        <article id="xArticleBody" class="paste-article">
+          <p>The 2026 World Cup opened with Mexico vs South Africa. 48 teams. 104 matches. The biggest World Cup ever.</p>
+          <p>So I gave Fable 5 a dumb but honest stress test: predict who wins the whole thing. Not a benchmark. Not a leaderboard. A prediction that can embarrass the model in public.</p>
+          <p>I gave it opening-week inputs: betting-market odds, squad strength, tournament format, historical favorite failure rates, travel, heat, and knockout variance.</p>
+          <p>The interesting part was not the winner. The interesting part was that it refused to behave like a fan. Most people answer &quot;who wins?&quot; with a country and a feeling. Fable 5 answered with a probability distribution.</p>
+          <figure data-image-marker="IMAGE 1 HERE — reasoning stack"><img src="assets/reasoning-stack.jpeg" alt="Fable 5 reasoning stack data card"><figcaption>Image 1 — pasted separately in step 3</figcaption></figure>
+          <p>Its first point: the betting market is the strongest prior. Odds are not pundit takes. They are a compressed signal from money, bias, information, and crowd belief. If you want to disagree with the market, you need to explain what the market missed.</p>
+          <p>Its second point: the &quot;favorite curse&quot; is not magic. Single-elimination football is brutal. Penalties, red cards, injuries, heat, travel, and one bad bounce can erase the best team in the world. A 22% favorite is not &quot;likely to win.&quot; It is &quot;more likely than anyone else, but still 78% likely to fail.&quot;</p>
+          <figure data-image-marker="IMAGE 2 HERE — favorite math"><img src="assets/favorite-math.jpeg" alt="World Cup favorite math data card"><figcaption>Image 2 — pasted separately in step 3</figcaption></figure>
+          <p>Its third point: the 48-team format increases variance. More games. More travel. More rotation. More chances for the tournament to punish shallow squads. That pushes the model toward depth, not just star power.</p>
+          <p>Final distribution from Fable 5:<br>Spain: 22%<br>France: 18%<br>Argentina: 13%<br>England: 11%<br>Brazil: 10%<br>Portugal: 8%<br>Everyone else: 18%</p>
+          <figure data-image-marker="IMAGE 3 HERE — forecast distribution"><img src="assets/fable5-forecast.jpeg" alt="Fable 5 World Cup probability forecast"><figcaption>Image 3 — pasted separately in step 3</figcaption></figure>
+          <p>If forced to pick one name, it picks Spain. But the real answer is: no team is even close to 50%.</p>
+          <p>That is what I liked about the output. A weaker model gives you a confident answer. A better model gives you a structure for uncertainty.</p>
+          <p>This is the part of AI I keep coming back to. The scarce thing is not &quot;an answer.&quot; Everyone has an answer. The scarce thing is judgment with uncertainty attached: what is the prior, what changed, what is the confidence, what would make the answer wrong, and how much of this is just variance?</p>
+          <p>A month from now, this prediction may look smart or stupid. That is fine. The model already said the most important thing: even its favorite probably loses.</p>
+        </article>
+        <h2 style="margin-top:24px;">X Thread Draft</h2>
+        <div class="toolbar">
+          <button data-copy-thread>Copy Full Thread</button>
+        </div>
+        <div id="threadText" class="copybox" hidden>1/ I gave Fable 5 a real public stress test: predict the 2026 World Cup winner. Not a benchmark. Not a vibe check. A prediction that can get exposed in a few weeks.
+
+2/ The setup: 48 teams. 104 matches. New format. More travel. More knockout variance. I gave it odds, squad context, tournament structure, and historical favorite failure rates.
+
+3/ What I liked: it did not answer like a fan. Most people give you one country and a feeling. Fable 5 gave a probability distribution.
+
+4/ Its core point: the betting market is the strongest prior. Odds are not just opinions. They are compressed information from money, bias, and crowd belief. If you disagree with the market, you need to know what the market missed.
+
+5/ Second point: the favorite curse is not magic. Single-elimination football is just high variance. Penalties, red cards, injuries, heat, travel, and one bad bounce can erase the best team.
+
+6/ Fable 5&#x27;s distribution: Spain 22%, France 18%, Argentina 13%, England 11%, Brazil 10%, Portugal 8%, everyone else 18%. Forced pick: Spain. Real answer: nobody is close to 50%.
+
+7/ That is the useful part. A weak model gives you confidence. A better model gives you uncertainty, priors, adjustment, and a way to be wrong. The scarce thing in AI is not answers. It is structured judgment.</div>
+        <div class="tweet">
+          <span class="label">1/</span>
+          <p>I gave Fable 5 a real public stress test: predict the 2026 World Cup winner. Not a benchmark. Not a vibe check. A prediction that can get exposed in a few weeks.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">2/</span>
+          <p>The setup: 48 teams. 104 matches. New format. More travel. More knockout variance. I gave it odds, squad context, tournament structure, and historical favorite failure rates.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">3/</span>
+          <p>What I liked: it did not answer like a fan. Most people give you one country and a feeling. Fable 5 gave a probability distribution.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">4/</span>
+          <p>Its core point: the betting market is the strongest prior. Odds are not just opinions. They are compressed information from money, bias, and crowd belief. If you disagree with the market, you need to know what the market missed.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">5/</span>
+          <p>Second point: the favorite curse is not magic. Single-elimination football is just high variance. Penalties, red cards, injuries, heat, travel, and one bad bounce can erase the best team.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">6/</span>
+          <p>Fable 5&#x27;s distribution: Spain 22%, France 18%, Argentina 13%, England 11%, Brazil 10%, Portugal 8%, everyone else 18%. Forced pick: Spain. Real answer: nobody is close to 50%.</p>
+        </div>
+        <div class="tweet">
+          <span class="label">7/</span>
+          <p>That is the useful part. A weak model gives you confidence. A better model gives you uncertainty, priors, adjustment, and a way to be wrong. The scarce thing in AI is not answers. It is structured judgment.</p>
+        </div>
+      </section>
+      <aside>
+        <h2>Image Assets</h2>
+        <p class="note">Use the step-3 buttons for pasting into X. These are backup download links.</p>
+        <div class="image-card">
+          <img src="assets/reasoning-stack.jpeg" alt="Fable 5 reasoning stack data card">
+          <strong>Image 1 — Reasoning stack</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/reasoning-stack.jpeg" download>Download</a>
+            <button data-open="assets/reasoning-stack.jpeg">Open</button>
+          </div>
+        </div>
+        <div class="image-card">
+          <img src="assets/favorite-math.jpeg" alt="World Cup favorite math data card">
+          <strong>Image 2 — Favorite math</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/favorite-math.jpeg" download>Download</a>
+            <button data-open="assets/favorite-math.jpeg">Open</button>
+          </div>
+        </div>
+        <div class="image-card">
+          <img src="assets/fable5-forecast.jpeg" alt="Fable 5 World Cup probability forecast">
+          <strong>Image 3 — Forecast distribution</strong>
+          <div class="image-actions">
+            <a class="download" href="assets/fable5-forecast.jpeg" download>Download</a>
+            <button data-open="assets/fable5-forecast.jpeg">Open</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    var headline = "I Asked Fable 5 to Predict the 2026 World Cup. It Refused to Give Me One Winner.";
+
+    function setStatus(message) {
+      var status = document.getElementById("copyStatus");
+      status.textContent = message;
+      setTimeout(function() { status.textContent = ""; }, 3200);
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, function(char) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char];
+      });
+    }
+
+    function normalizePlainText(text) {
+      return text
+        .replace(/\u00a0/g, " ")
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n[ \t]+/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
+    function bodyBlocks() {
+      return Array.from(document.getElementById("xArticleBody").children);
+    }
+
+    function buildBodyHtml() {
+      var html = [];
+      bodyBlocks().forEach(function(el) {
+        if (el.tagName === "P") {
+          var plainText = normalizePlainText(el.innerText);
+          if (plainText) {
+            html.push("<p>" + plainText.split("\n").map(escapeHtml).join("<br>") + "</p>");
+          }
+        }
+        if (el.tagName === "FIGURE") {
+          html.push("<p>" + escapeHtml("[ " + el.getAttribute("data-image-marker") + " ]") + "</p>");
+        }
+      });
+      return html.join("");
+    }
+
+    function buildBodyPlainText() {
+      var chunks = [];
+      bodyBlocks().forEach(function(el) {
+        if (el.tagName === "P") {
+          var text = normalizePlainText(el.innerText);
+          if (text) {
+            chunks.push(text);
+          }
+        }
+        if (el.tagName === "FIGURE") {
+          chunks.push("[ " + el.getAttribute("data-image-marker") + " ]");
+        }
+      });
+      return chunks.filter(Boolean).join("\n\n");
+    }
+
+    async function copyBody() {
+      var plain = buildBodyPlainText();
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          "text/html": new Blob([buildBodyHtml()], { type: "text/html" }),
+          "text/plain": new Blob([plain], { type: "text/plain" })
+        })]);
+        setStatus("Copied article text. Paste into the X article body, then add images (step 3).");
+      } else {
+        await navigator.clipboard.writeText(plain);
+        setStatus("Copied article text (plain). Paste into the X article body.");
+      }
+    }
+
+    function imagePngBlob(src) {
+      return new Promise(function(resolve, reject) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          canvas.getContext("2d").drawImage(img, 0, 0);
+          canvas.toBlob(function(blob) {
+            if (blob) { resolve(blob); } else { reject(new Error("PNG conversion failed")); }
+          }, "image/png");
+        };
+        img.onerror = function() { reject(new Error("Could not load " + src)); };
+        img.src = src;
+      });
+    }
+
+    // Clipboard image writes only accept image/png, and Safari requires the
+    // promise form of ClipboardItem, so the blob promise is passed directly.
+    async function copyImageToClipboard(src, label) {
+      if (!navigator.clipboard || !window.ClipboardItem) {
+        throw new Error("This browser cannot copy images. Use the download link instead.");
+      }
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": imagePngBlob(src) })]);
+      setStatus("Copied " + label + ". In X, click at the end of its marker line and paste (⌘V), then triple-click the marker line and press ⌫ twice.");
+    }
+
+    document.querySelector("[data-copy-body]").addEventListener("click", function() {
+      copyBody().catch(function(error) {
+        setStatus("Copy failed: " + error.message);
+        console.error(error);
+      });
+    });
+
+    document.querySelectorAll("[data-copy-image]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        copyImageToClipboard(btn.getAttribute("data-copy-image"), btn.getAttribute("data-image-label")).catch(function(error) {
+          setStatus("Image copy failed: " + error.message);
+          console.error(error);
+        });
+      });
+    });
+
+    document.querySelector("[data-copy-headline]").addEventListener("click", async function() {
+      await navigator.clipboard.writeText(headline);
+      setStatus("Copied headline. Paste into the X title field.");
+    });
+
+    var threadBtn = document.querySelector("[data-copy-thread]");
+    if (threadBtn) {
+      threadBtn.addEventListener("click", async function() {
+        await navigator.clipboard.writeText(document.getElementById("threadText").textContent.trim());
+        setStatus("Copied thread.");
+      });
+    }
+
+    document.querySelectorAll("[data-open]").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        window.open(btn.getAttribute("data-open"), "_blank");
+      });
+    });
+
+    window.__xArticleCopy = {
+      buildBodyHtml: buildBodyHtml,
+      buildBodyPlainText: buildBodyPlainText
+    };
+  </script>
+</body>
+</html>

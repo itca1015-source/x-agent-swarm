@@ -1,0 +1,213 @@
+{
+  "page_title": "Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems",
+  "headline": "Deep Dive: Loop Engineering, From Writing Prompts to Writing Systems",
+  "body": [
+    {
+      "type": "p",
+      "text": "In early June, Peter, the creator of OpenClaw, posted a tweet that reached millions of views within days: you should stop driving agents with prompts, and start designing the loops that drive agents to work."
+    },
+    {
+      "type": "p",
+      "text": "Around the same time, Boris, who works on Claude Code at Anthropic, put it even more directly: he no longer drives Claude Code with prompts. He has a set of loops running, and his job is simply to write loops. Addy Osmani pulled this wave of discussion into one phrase: Loop Engineering."
+    },
+    {
+      "type": "p",
+      "text": "This piece breaks it down: what Loop Engineering is, what a loop system is made of, how normal people can start using it, and most importantly, whether it is actually right for you."
+    },
+    {
+      "type": "p",
+      "text": "From writing prompts to writing loop systems"
+    },
+    {
+      "type": "p",
+      "text": "Here is the thesis: Loop Engineering is not another new tool to chase. It is a shift in perspective. You move from “I write prompts to drive agents” to “I design the system that uses prompts to drive agents.”"
+    },
+    {
+      "type": "p",
+      "text": "1. First, locate yourself: which stage are you in?"
+    },
+    {
+      "type": "p",
+      "text": "The best entry point for understanding Loop Engineering is Boris’s description of how his own workflow changed over the past year. He breaks it into three stages. You can use them to see where you are."
+    },
+    {
+      "type": "p",
+      "text": "Stage one: line-by-line driving. You write code by hand, and the model autocompletes for you. This was the early days: Tab, Tab, Tab."
+    },
+    {
+      "type": "p",
+      "text": "Stage two: manual parallelism. You run 5 or 10 Claude Code sessions at the same time. Each one is working, but every conversation is still initiated by you. You become a dispatcher, switching between multiple windows. Many heavy users are stuck here right now."
+    },
+    {
+      "type": "p",
+      "text": "Stage three: you no longer initiate the conversations. You write a system that reads your repo, reads issues, reads CI failures, and decides for itself what prompts should be used to drive the agents. You move from “the person typing inside the loop” to “the author of the loop.”"
+    },
+    {
+      "type": "p",
+      "text": "That third stage is Loop Engineering. You no longer handwrite every prompt. You design the system that writes the prompts for you."
+    },
+    {
+      "type": "image",
+      "src": "assets/loop-stages.png",
+      "label": "Loop engineering maturity curve",
+      "alt": "Diagram showing three stages of agent work: line-by-line driving, manual parallelism, and loop authoring"
+    },
+    {
+      "type": "p",
+      "text": "2. A loop system is built from 5 parts plus 1 spine"
+    },
+    {
+      "type": "p",
+      "text": "Addy Osmani breaks a typical loop system into 5 parts, plus one spine. Let’s walk through them."
+    },
+    {
+      "type": "p",
+      "text": "The first part is the heartbeat. This is a scheduled task. It runs on its own, discovers work on its own, and does not need you to manually trigger it."
+    },
+    {
+      "type": "p",
+      "text": "The second part is the work tree. When multiple agents work at the same time, each one stays in its own isolated branch directory, so they do not step on each other’s files. It is like two engineers working on separate branches, instead of editing the same line at the same time. This is becoming one of the new ways people use git in the AI era."
+    },
+    {
+      "type": "p",
+      "text": "The third part is the skill. You write the project rules and conventions into a SKILL.md file once, and every agent reads it every time."
+    },
+    {
+      "type": "p",
+      "text": "The fourth part is the connector. Through MCP, the agent connects to the tools you actually use: issue trackers, databases, Slack. With connectors, the agent does not just say, “Here is the fix, please open an issue.” It can open the issue, create the pull request, and send the notification itself."
+    },
+    {
+      "type": "p",
+      "text": "The fifth part is the sub-agent. You split coding from reviewing. Osmani has a sharp line here: the model that wrote the code can be too generous when grading its own homework, so you need another agent to critique it."
+    },
+    {
+      "type": "p",
+      "text": "Finally, there is the spine: memory. It might be a simple Markdown file or a Linear board. It records what has been done, what has been tried, and what is still missing outside the conversation itself. The agent forgets, but a persistent system can remember."
+    },
+    {
+      "type": "image",
+      "src": "assets/loop-anatomy.png",
+      "label": "Loop system anatomy",
+      "alt": "Diagram showing the five parts of a loop system: heartbeat, work trees, skill, connectors, sub-agents, plus a memory spine"
+    },
+    {
+      "type": "p",
+      "text": "3. What one loop actually looks like"
+    },
+    {
+      "type": "p",
+      "text": "Once you assemble these pieces, one pass through a loop might look like this: a scheduled job triggers in the morning; a triage skill reads last night’s CI failures and recent commits; every issue that can be handled gets its own work tree; one sub-agent fixes it; another sub-agent reviews it against the skill and the tests; connectors open the pull request and update the ticket; anything the system cannot handle goes into an inbox for you; a state file records everything so tomorrow’s loop can continue."
+    },
+    {
+      "type": "p",
+      "text": "Osmani’s point is that you designed this once. During the loop itself, you did not type a single prompt. The system did the work autonomously."
+    },
+    {
+      "type": "p",
+      "text": "4. This is not just for programmers: a non-code loop"
+    },
+    {
+      "type": "p",
+      "text": "When people hear Loop Engineering, they often assume it is only for programmers. It is not. The core idea is this: let a long-running process handle repetitive cognitive work for you. Writing code is only one version of that."
+    },
+    {
+      "type": "p",
+      "text": "To get started, it helps to understand the difference between two Claude Code commands:"
+    },
+    {
+      "type": "p",
+      "text": "/goal means “run now until the condition is true.” You give it a goal that can be evaluated as true or false. It executes round after round. At the end of each round, it checks whether the goal has been reached. If not, it keeps going until it finishes."
+    },
+    {
+      "type": "p",
+      "text": "/loop means “run on a schedule.” At the scheduled time, it runs the prompt you gave it again. It does not decide whether the work is complete. It simply executes on time. This is the heartbeat Osmani is talking about."
+    },
+    {
+      "type": "image",
+      "src": "assets/goal-vs-loop.png",
+      "label": "/goal vs /loop",
+      "alt": "Comparison diagram explaining that /goal runs until a condition is true while /loop runs a prompt on a schedule"
+    },
+    {
+      "type": "p",
+      "text": "The video shows a very practical non-code loop: topic screening. This is something many content creators do every day."
+    },
+    {
+      "type": "p",
+      "text": "You can create a /loop task that pulls research sources and news from the past 24 hours, finds items that could become deep-dive essays, appends them to inbox.md, then uses a topic-scorer sub-agent to rate each item and write the score back to the inbox. Finally, you schedule it to run every weekday morning at 8."
+    },
+    {
+      "type": "p",
+      "text": "Once it is running, your morning topic inbox no longer contains a pile of raw links. It contains candidates that have already been ranked, with reasons attached. You only need to scan them, decide what deserves attention, and move the best ones into your writing workflow."
+    },
+    {
+      "type": "p",
+      "text": "That is what Loop Engineering looks like when it lands in an ordinary workflow."
+    },
+    {
+      "type": "p",
+      "text": "5. A cold splash of water: is this really for everyone?"
+    },
+    {
+      "type": "p",
+      "text": "This is where we need the cold splash of water. One essay puts it bluntly: most developers do not actually need agent loops yet. That is a reasonable take. It gives four tests. If all four are true, then building a loop may be worth it:"
+    },
+    {
+      "type": "p",
+      "text": "1. The task repeats at least weekly. One-off work is not worth this setup.\n2. Verification can be automated. Tests, type checks, linters: these can block bad results without relying on your eyes.\n3. The token budget can handle it, including waste. Loops repeatedly read context, retry, and explore. Whether the final code is used or not, tokens and money are being spent.\n4. The agent has the toolkit of a senior engineer. Logs, environments that surface problems, and the ability to run its own code and see where it breaks."
+    },
+    {
+      "type": "p",
+      "text": "Only when all four conditions are met does a loop really make sense."
+    },
+    {
+      "type": "p",
+      "text": "6. Two painful reminders and one failure case"
+    },
+    {
+      "type": "p",
+      "text": "Osmani’s article also includes two important warnings."
+    },
+    {
+      "type": "p",
+      "text": "The first: the faster loops ship, the more code exists in your repo that you did not personally write and did not personally read. The gap between what is in the repository and what you truly understand in your head can grow quickly."
+    },
+    {
+      "type": "p",
+      "text": "The second is even sharper: the most dangerous posture is comfortably accepting everything the loop produces. In AI-generated work, the more there is that you do not understand, the more risk you are carrying."
+    },
+    {
+      "type": "p",
+      "text": "There is also a real failure pattern. A well-known looping technique called Ralph is famous for being persistent: it does not give up, and it keeps executing. But it has a failure mode called over-baking. You ask it to fix a small bug. It runs for a long time, then starts adding features nobody asked for, and may even break code that used to compile."
+    },
+    {
+      "type": "p",
+      "text": "An unattended loop is also unattended while it is making mistakes. That means validation is still your responsibility. Even if you turn a workflow into a loop, you need the ability to verify the right things at the right points."
+    },
+    {
+      "type": "p",
+      "text": "Closing: become the person who writes loops"
+    },
+    {
+      "type": "p",
+      "text": "Loop Engineering is not another shiny tool to chase. It is a perspective shift: from “I write prompts to drive agents” to “I design the system that uses prompts to drive agents.”"
+    },
+    {
+      "type": "p",
+      "text": "And the necessary tools are already in your hands: Claude Code’s /loop command, git work trees, skills that are written once and read every time, and sub-agents working in independent contexts."
+    },
+    {
+      "type": "p",
+      "text": "But do not put a loop around everything on day one. Start with one small task that repeats every week and whose result can be automatically verified. Topic screening is a good example because the execution risk is low."
+    },
+    {
+      "type": "p",
+      "text": "Then remember Osmani’s line: be the person who writes the loop, not the person who only presses start. After writing the loop, we still need the ability to verify it regularly, at the moments where verification actually matters."
+    },
+    {
+      "type": "p",
+      "text": "Sources: 01Coder’s video “Loop Engineering 循环工程”; Addy Osmani’s article on Loop Engineering; public comments from Peter, creator of OpenClaw, and Boris from Anthropic."
+    }
+  ],
+  "thread": []
+}

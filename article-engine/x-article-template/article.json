@@ -1,0 +1,30 @@
+{
+  "page_title": "Fable 5 World Cup X Article Draft",
+  "headline": "I Asked Fable 5 to Predict the 2026 World Cup. It Refused to Give Me One Winner.",
+  "body": [
+    { "type": "p", "text": "The 2026 World Cup opened with Mexico vs South Africa. 48 teams. 104 matches. The biggest World Cup ever." },
+    { "type": "p", "text": "So I gave Fable 5 a dumb but honest stress test: predict who wins the whole thing. Not a benchmark. Not a leaderboard. A prediction that can embarrass the model in public." },
+    { "type": "p", "text": "I gave it opening-week inputs: betting-market odds, squad strength, tournament format, historical favorite failure rates, travel, heat, and knockout variance." },
+    { "type": "p", "text": "The interesting part was not the winner. The interesting part was that it refused to behave like a fan. Most people answer \"who wins?\" with a country and a feeling. Fable 5 answered with a probability distribution." },
+    { "type": "image", "src": "assets/reasoning-stack.jpeg", "label": "Reasoning stack", "alt": "Fable 5 reasoning stack data card" },
+    { "type": "p", "text": "Its first point: the betting market is the strongest prior. Odds are not pundit takes. They are a compressed signal from money, bias, information, and crowd belief. If you want to disagree with the market, you need to explain what the market missed." },
+    { "type": "p", "text": "Its second point: the \"favorite curse\" is not magic. Single-elimination football is brutal. Penalties, red cards, injuries, heat, travel, and one bad bounce can erase the best team in the world. A 22% favorite is not \"likely to win.\" It is \"more likely than anyone else, but still 78% likely to fail.\"" },
+    { "type": "image", "src": "assets/favorite-math.jpeg", "label": "Favorite math", "alt": "World Cup favorite math data card" },
+    { "type": "p", "text": "Its third point: the 48-team format increases variance. More games. More travel. More rotation. More chances for the tournament to punish shallow squads. That pushes the model toward depth, not just star power." },
+    { "type": "p", "text": "Final distribution from Fable 5:\nSpain: 22%\nFrance: 18%\nArgentina: 13%\nEngland: 11%\nBrazil: 10%\nPortugal: 8%\nEveryone else: 18%" },
+    { "type": "image", "src": "assets/fable5-forecast.jpeg", "label": "Forecast distribution", "alt": "Fable 5 World Cup probability forecast" },
+    { "type": "p", "text": "If forced to pick one name, it picks Spain. But the real answer is: no team is even close to 50%." },
+    { "type": "p", "text": "That is what I liked about the output. A weaker model gives you a confident answer. A better model gives you a structure for uncertainty." },
+    { "type": "p", "text": "This is the part of AI I keep coming back to. The scarce thing is not \"an answer.\" Everyone has an answer. The scarce thing is judgment with uncertainty attached: what is the prior, what changed, what is the confidence, what would make the answer wrong, and how much of this is just variance?" },
+    { "type": "p", "text": "A month from now, this prediction may look smart or stupid. That is fine. The model already said the most important thing: even its favorite probably loses." }
+  ],
+  "thread": [
+    "1/ I gave Fable 5 a real public stress test: predict the 2026 World Cup winner. Not a benchmark. Not a vibe check. A prediction that can get exposed in a few weeks.",
+    "2/ The setup: 48 teams. 104 matches. New format. More travel. More knockout variance. I gave it odds, squad context, tournament structure, and historical favorite failure rates.",
+    "3/ What I liked: it did not answer like a fan. Most people give you one country and a feeling. Fable 5 gave a probability distribution.",
+    "4/ Its core point: the betting market is the strongest prior. Odds are not just opinions. They are compressed information from money, bias, and crowd belief. If you disagree with the market, you need to know what the market missed.",
+    "5/ Second point: the favorite curse is not magic. Single-elimination football is just high variance. Penalties, red cards, injuries, heat, travel, and one bad bounce can erase the best team.",
+    "6/ Fable 5's distribution: Spain 22%, France 18%, Argentina 13%, England 11%, Brazil 10%, Portugal 8%, everyone else 18%. Forced pick: Spain. Real answer: nobody is close to 50%.",
+    "7/ That is the useful part. A weak model gives you confidence. A better model gives you uncertainty, priors, adjustment, and a way to be wrong. The scarce thing in AI is not answers. It is structured judgment."
+  ]
+}
