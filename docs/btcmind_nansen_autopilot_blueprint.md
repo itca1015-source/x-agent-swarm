@@ -173,7 +173,7 @@ Starting communities from Nansen analysis:
 
 ### 9. UGC Engine
 
-Job: Create the supply that Reposter amplifies.
+Job: Create original content supply for the posting pipeline.
 
 Mechanics:
 

@@ -8,8 +8,6 @@ Runnable specs for the agent swarm that operates BTCMind's English X account, mo
 | [01-poster.md](01-poster.md) | Poster (original posts) | Action |
 | [02-quoter.md](02-quoter.md) | Quoter | Action |
 | [03-replier.md](03-replier.md) | Replier | Action |
-| [04-reposter.md](04-reposter.md) | Reposter | Action |
-| [05-amplification-engine.md](05-amplification-engine.md) | Amplification / UGC engine | Growth |
 | [06-listener-radar.md](06-listener-radar.md) | Listener / Radar | Intelligence |
 | [07-connector-scout.md](07-connector-scout.md) | Connector / Audience scout | Intelligence |
 | [08-scheduler-orchestrator.md](08-scheduler-orchestrator.md) | Scheduler / Orchestrator | Orchestration |

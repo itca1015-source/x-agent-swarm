@@ -85,7 +85,7 @@ Core agent layers:
 
 - Listener / radar: discover relevant posts and market signals
 - Connector / scout: identify accounts, audiences, and conversations
-- Replier / quoter / reposter: draft context-specific engagement
+- Replier / quoter: draft context-specific replies and quote posts
 - Brand safety gate: block unsupported claims, spammy behavior, and risky topics
 - Scheduler / orchestrator: manage timing and workflow state
 - Analytics / learning: review performance and update strategy
